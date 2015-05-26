@@ -88,7 +88,7 @@ shift $((OPTIND - 1))
 ICON=$1
 
 $CURL -s $SRC > $MATERIALS_HTML
-cat $MATERIALS_HTML | $PERL -nle 'if($_=~/^<div><img src=.\.\/(.*\.svg).><br>(.*)<\/div>$/){print "$1"}' > $ICON_LIST
+cat $MATERIALS_HTML | $PERL -nle 'if($_=~/^<img class="svg" data-src="(.*.svg)">$/){print "$1"}' > $ICON_LIST
 
 ICON_SVG="ic_${ICON}_24px.svg"
 
@@ -99,8 +99,7 @@ if [ $EXIST_FLG -ne 1 ]; then
     exit 1
 fi
 
-ICON_PATH=`cat $ICON_LIST | $GREP $ICON_SVG`
-ICON_URL=$SRC$ICON_PATH
+ICON_URL=`cat $ICON_LIST | $GREP $ICON_SVG`
 
 echo "Downloading $ICON svg ..."
 if ! $CURL -s -o /tmp/$ICON_SVG -O $ICON_URL; then
